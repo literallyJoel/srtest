@@ -44,7 +44,6 @@ describe("POST /checkout", () => {
     const res = await request(app)
       .post("/checkout")
       .send({ code: "A", quantity: 1 });
-    console.log(res.body);
     expect(res.body).toEqual({
       subtotals: [{ code: "A", quantity: 1, subtotal: 50 }],
       total: 50,
