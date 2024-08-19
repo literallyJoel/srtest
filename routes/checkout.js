@@ -78,7 +78,7 @@ function calculateDiscountedTotal(
     const numberToDiscount = Math.floor(quantity / discountQuantity);
     totalPrice = numberToDiscount * discountPrice;
   }
-
+  
   // Add the price of items that do not qualify for the discount
   const fullPriced = quantity % discountQuantity;
   return totalPrice + fullPriced * price;

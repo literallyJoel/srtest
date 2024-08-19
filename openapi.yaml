@@ -1,0 +1,120 @@
+openapi: 3.0.3
+info:
+  title: Item Checkout API
+  description: >-
+    Simple API for calculating the total price of items including any applicable discounts.
+  version: 1.0.0
+
+servers:
+  - url: http://localhost:8080
+tags:
+  - name: Checkout
+    description: Endpoint for calculating the total price of items including any applicable discounts.
+paths:
+  /checkout:
+    post:
+      tags:
+        - Checkout
+      summary: Calculate the total price of items including any applicable discounts.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              oneOf:
+                - type: array
+                  items:
+                    type: object
+                    properties:
+                      code:
+                        type: string
+                        description: The item code to calculate the price for.
+                      quantity:
+                        type: number
+                        description: The quantity of the item to calculate the price for.
+                    required:
+                      - code
+                      - quantity
+                  example:
+                    - code: A
+                      quantity: 3
+                    - code: B
+                      quantity: 2
+                - type: object
+                  properties:
+                    code:
+                      type: string
+                      description: The item code to calculate the price for.
+                    quantity:
+                      type: number
+                      description: The quantity of the item to calculate the price for.
+                  required:
+                    - code
+                    - quantity
+                  example:
+                    code: A
+                    quantity: 1
+      responses:
+        200:
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  subtotals:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        code:
+                          type: string
+                          description: The item code.
+                        quantity:
+                          type: number
+                          description: The quantity of the item.
+                        subtotal:
+                          type: number
+                          description: The total price of the item.
+                      required:
+                        - code
+                        - quantity
+                        - subtotal
+                    example:
+                      - code: A
+                        quantity: 3
+                        subtotal: 140
+                      - code: B
+                        quantity: 2
+                        subtotal: 60
+                  total:
+                    type: number
+                    description: The total price of all items.
+                    example: 200
+        400:
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: The error message.
+                required:
+                  - error
+              example:
+                error: "Invalid request body. Expected [{code: string, quantity: number}] or {code: string, quantity: number}"
+        500:
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: The error message.
+                required:
+                  - error
+                example:
+                  error: "Internal Server Error"
