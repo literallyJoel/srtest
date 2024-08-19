@@ -4,7 +4,7 @@ const request = require("supertest");
 
 const { describe, it, expect, afterAll, beforeAll } = require("@jest/globals");
 
-describe("GET /", () => {
+describe("POST /checkout", () => {
   let server;
   beforeAll(() => {
     server = app.listen(process.env.PORT ?? 8080, () => {
@@ -40,7 +40,7 @@ describe("GET /", () => {
   });
 
   it("should respond with the correct total price and subtotals for a single item", async () => {
-    //Usually we'd mock the database calls here but we're using static data
+    //Usually we'd mock the database calls (or use an in-memory temp database)here but we're using static data
     const res = await request(app)
       .post("/checkout")
       .send({ code: "A", quantity: 1 });

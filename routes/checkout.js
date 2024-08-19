@@ -84,13 +84,7 @@ function calculateDiscountedTotal(
   return totalPrice + fullPriced * price;
 }
 
-/**
- * POST endpoint that calculates the total price and subtotals of items based on their quantity and any applicable discounts.
- *
- * @param {Object} req - The HTTP request object.
- * @param {Object} res - The HTTP response object.
- * @param {Function} next - The next middleware function.
- */
+//calculates the total price and subtotals of items based on their quantity and any applicable discounts.
 router.post("/", (req, res, next) => {
   try {
     // Validate the request body and return 400 if invalid

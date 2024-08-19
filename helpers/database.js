@@ -1,5 +1,6 @@
 const Database = require("better-sqlite3");
 const path = require("path");
+const logger = require("./logging");
 // Initialise the SQLite database
 const db = new Database(path.join(__dirname, "..", "db.sqlite"));
 
@@ -19,7 +20,7 @@ function setup() {
 
     // Create the offers table
     db.exec(
-      "CREATE TABLE IF NOT EXISTS offers (item_code TEXT NOT NULL, discount_quantity INTEGER NOT NULL, discount_price INTEGER NOT NULL, PRIMARY KEY (item_code, discount_quantity))"
+      "CREATE TABLE IF NOT EXISTS offers (item_code TEXT NOT NULL, discount_quantity INTEGER NOT NULL, discount_price INTEGER NOT NULL, PRIMARY KEY (item_code, discount_quantity), FOREIGN KEY (item_code) REFERENCES product(item_code))"
     );
 
     // Insert initial data into the product table
