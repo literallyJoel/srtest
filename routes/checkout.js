@@ -78,7 +78,7 @@ function calculateDiscountedTotal(
     const numberToDiscount = Math.floor(quantity / discountQuantity);
     totalPrice = numberToDiscount * discountPrice;
   }
-  
+
   // Add the price of items that do not qualify for the discount
   const fullPriced = quantity % discountQuantity;
   return totalPrice + fullPriced * price;
@@ -98,11 +98,34 @@ router.post("/", (req, res, next) => {
       return;
     }
 
+
+    const present = {};
+    
+    requested.forEach((requested) => {
+      if (present[requested.code]) {
+        present[requested.code] += requested.quantity;
+      } else {
+        present[requested.code] = requested.quantity;
+      }
+    });
+
+    console.log("present", present);
+    const toRetrieve = [];
+
+    Object.keys(present).forEach((key) => {
+      toRetrieve.push({
+        code: key,
+        quantity: present[key],
+      });
+    });
+
+
+
     // Get the item details from the database
-    const dbItemDetails = getItemDetails(requested.map((item) => item.code));
+    const dbItemDetails = getItemDetails(toRetrieve.map((item) => item.code));
 
     // Ensure there are no unknown items and return 400 if there are
-    if (dbItemDetails.length !== requested.length) {
+    if (dbItemDetails.length !== toRetrieve.length) {
       res.status(400).json({
         error: "Unknown item code included",
       });
@@ -111,7 +134,7 @@ router.post("/", (req, res, next) => {
 
     // Create a map of item codes to requested quantities
     const requestedQuantities = new Map(
-      requested.map((item) => [item.code, item.quantity])
+      toRetrieve.map((item) => [item.code, item.quantity])
     );
 
     // Combine database details with requested quantities
